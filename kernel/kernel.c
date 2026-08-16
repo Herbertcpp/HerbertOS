@@ -9,14 +9,16 @@ int str_len(char *str) {
 }
 
 void print(char *msg) {
-  int length = str_len(msg);
-  int cur_pos = 0;
-  for (int i = cur_pos; i < length; i++) {
-    vga[i] = msg[i] | (0x07 << 8);
+  static int current_pos = 0;
+  int pos = 0;
+  while (current_pos <= current_pos + str_len(msg) & msg[pos] != '\0') {
+    vga[current_pos] = msg[pos] | (0x07 << 8);
+    current_pos++;
+    pos++;
   }
 }
 
 void kmain() {
-  print("Bye World");
+  print("Bye World\n");
   print("Haii");
 }
