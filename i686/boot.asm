@@ -1,10 +1,16 @@
 extern kmain
 
 section .multiboot
-  ALIGN 4
-  dd 0x1BADB002
+  ALIGN 8
+  header_start:
+  dd 0xE85250D6 
   dd 0
-  dd -(0x1BADB002 + 0)
+  dd header_end - header_start
+  dd -(0xE85250D6 + 0 + (header_end - header_start))
+  dw 0
+  dw 0
+  dd 8
+  header_end:
 
 section .bss
   ALIGN 16
