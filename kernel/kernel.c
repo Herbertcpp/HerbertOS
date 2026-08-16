@@ -1,3 +1,5 @@
+#define col 80
+
 volatile short *vga = (short *)0xB8000;
 
 int str_len(char *str) {
@@ -12,13 +14,28 @@ void print(char *msg) {
   static int current_pos = 0;
   int pos = 0;
   while (current_pos <= current_pos + str_len(msg) & msg[pos] != '\0') {
-    vga[current_pos] = msg[pos] | (0x07 << 8);
-    current_pos++;
-    pos++;
+    if (msg[pos] != '\n') {
+      vga[current_pos] = msg[pos] | (0x07 << 8);
+      current_pos++;
+      pos++;
+    }
+
+    if (msg[pos] == '\n') {
+      int row = current_pos / col;
+      int total = ++row * col;
+      int rem = total - current_pos;
+
+      for (int i = 0; i < rem; i++) {
+        vga[current_pos] = ' ' | (0x07 << 8);
+        current_pos++;
+      }
+      pos++;
+    }
   }
 }
 
 void kmain() {
   print("Bye World\n");
   print("Haii");
+  print("Im literally Terry Davis himself\nlike on some real\nshit");
 }
