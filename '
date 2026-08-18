@@ -1,5 +1,4 @@
 #define col 80
-#include <stdint.h>
 
 volatile short *vga = (short *)0xB8000;
 
@@ -14,7 +13,7 @@ int str_len(char *str) {
 void print(char *msg) {
   static int current_pos = 0;
   int pos = 0;
-  while (msg[pos] != '\0') {
+  while (current_pos <= current_pos + str_len(msg) & msg[pos] != '\0') {
     if (msg[pos] != '\n') {
       vga[current_pos] = msg[pos] | (0x07 << 8);
       current_pos++;
@@ -35,25 +34,4 @@ void print(char *msg) {
   }
 }
 
-struct framebuffer_info {
-  uint32_t type;
-  uint32_t size;
-  uint64_t framebuffer_addr;
-  uint32_t framebuffer_pitch;
-  uint32_t framebuffer_width;
-  uint32_t framebuffer_height;
-  uint8_t framebuffer_bpp;
-  uint8_t framebuffer_type;
-  uint8_t reserved;
-};
-
-typedef struct info {
-  uint32_t type;
-  uint32_t s;
-};
-
-void kmain() {
-  volatile uint64_t *framebuf_addr;
-  struct framebuffer_info *dummy;
-  struct info *info_dummy;
-}
+void kmain(unsigned long *framebuffer_addr) {}
