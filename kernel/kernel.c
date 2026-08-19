@@ -49,11 +49,35 @@ struct framebuffer_info {
 
 typedef struct info {
   uint32_t type;
-  uint32_t s;
+  uint32_t size;
 };
 
-void kmain() {
-  volatile uint64_t *framebuf_addr;
-  struct framebuffer_info *dummy;
-  struct info *info_dummy;
+typedef struct framebuffer {
+  uint32_t type;
+  uint32_t size;
+  uint64_t *framebuffer_addr;
+  uint32_t pitch;
+  uint32_t width;
+  uint32_t height;
+  uint8_t bpp;
+  uint8_t framebuffer_type;
+  uint8_t reserved;
+};
+
+void kmain(uint32_t *info_ptr) {
+  uint64_t *framebuff_addr;
+  struct framebuffer *dummy;
+  struct info *information;
+
+  info_ptr += 2;
+
+  while (1) {
+    information = (struct info *)info_ptr;
+    if (information->type == 8) {
+      dummy = (struct framebuffer *)info_ptr;
+      framebuff_addr = dummy->framebuffer_addr;
+    }
+    int size = information->size;
+    (uint8_t *)info_ptr += size;
+  }
 }
