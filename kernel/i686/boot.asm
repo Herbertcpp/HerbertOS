@@ -7,12 +7,12 @@ section .multiboot
   dd 0
   dd header_end - header_start
   dd -(0xE85250D6 + 0 + (header_end - header_start))
-  dw 5 ;type
-  dw 0;flags
-  dd 20 ;size
-  dd 0
-  dd 0
-  dd 32
+  ;dw 5 ;type
+  ;dw 0;flags
+  ;dd 20 ;size
+  ;dd 0
+  ;dd 0
+  ;dd 32
 
   dd 0
 
