@@ -36,39 +36,57 @@ void print(char *msg) {
   }
 }
 
-void print_integer(int number) {
-  int converted[1024];
-  int totalDigits = 0;
-  while(number > 0) {
-    converted[totalDigits] = number % 10;
-    number /= 10;
+void print_integer(int n) {
+  char buffer[20];
+  int i = 0;
 
-    totalDigits++;
+  if(n < 0) {
+    print("-");
+    n = -n;
   }
-  char converted_str[totalDigits];
-  for(int i = 0; i < totalDigits; i++) {
-    converted_str[i] = '0' + converted[i];
+  if(n == 0) {
+    print("0");
+    return;
   }
-  print(converted_str);
+
+  while(n > 0) {
+    buffer[i++] = '0' + (n%10);
+    n /= 10;
+  }
+  buffer[i] = '\0';
+  int start = 0;
+  int end = i - 1;
+  while(start < end) {
+    char temp = buffer[end];
+    buffer[end] = buffer[start];
+    buffer[start] = temp;
+    start++;
+    end--;
+  }
+  print(buffer);
 }
 
 uint8_t read_cmos_register(uint8_t reg) {
   uint8_t time = 0;
-  __asm__(
-    "out 0x70, %1\n"
-    "in %0, 0x71\n"
+  __asm__ volatile (
+    "out 0x70, %b1\n"
+    "in %b0, 0x71\n"
     : "=a" (time)
-    : "a"  (reg)
+    : "a"  (reg | 0x080)
   );
   return time;
+}
+
+uint8_t bcd_to_decimal(uint8_t bcd_number) {
+  return ((bcd_number >> 4) * 10) + (bcd_number & 0x0F);
 }
 
 bool cmos_update_register() {
   uint8_t flag = 1;
 
-  __asm__(
-    "out 0x70, %1\n"
-    "in %0, 0x71\n"
+  __asm__ volatile (
+    "out 0x70, %b1\n"
+    "in %b0, 0x71\n"
     : "=a" (flag)
     : "a"  ((uint8_t)0x8A)
   );
@@ -98,11 +116,21 @@ void readTime() {
 
   do {} while(cmos_update_register());
 
+  int raw_values[7];
   for(;iteration_index < 7; iteration_index++) {
 
-  uint8_t time = read_cmos_register(registers[iteration_index]);
+  raw_values[iteration_index] = read_cmos_register(registers[iteration_index]);
+  }
+  uint8_t status_b = read_cmos_register(0x0B);
+  bool binary = (status_b & 0x04);
+  for(int i = 0; i < 7; i++) {
+  int time = raw_values[i];
 
-  print(labels[iteration_index]);
+  if(!binary) {
+      time = bcd_to_decimal(time);
+    }
+
+  print(labels[i]);
   print(":");
   print_integer(time);
   print("\n");
@@ -110,5 +138,7 @@ void readTime() {
 }
 
 void kmain(uint32_t *info_ptr) {
+  print("Daddy Herbert is so good at programming\n");
+  print("Herbert is the Stallman of 2026\n");
   readTime();
 }
