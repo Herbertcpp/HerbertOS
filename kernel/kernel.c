@@ -137,8 +137,27 @@ void readTime() {
   }
 }
 
+struct IDT_entry {
+  uint16_t offset_low;
+  uint32_t segment_selector;
+  uint8_t reserved;
+  uint8_t attributes;
+  uint16_t offset_high;
+} __attribute__((packed));
+
+struct IDTR {
+  uint16_t size;
+  uint32_t offset;
+};
+
 void kmain(uint32_t *info_ptr) {
-  print("Daddy Herbert is so good at programming\n");
-  print("Herbert is the Stallman of 2026\n");
-  readTime();
+  struct IDT_entry idt_entries[256];
+  struct IDTR idtr;
+  idtr.size = 8 * 256 - 1;
+  idtr.offset = (uint32_t)idt_entries;
+  __asm__ volatile (
+    "lidt [%0]"
+    :
+    : "r" (idtr)
+  );
 }
