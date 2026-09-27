@@ -18,7 +18,7 @@ uint8_t bcd_to_decimal(uint8_t bcd_number) {
 bool cmos_update_register() {
   uint8_t flag = 1;
 
-  __asm__ volatile("out 0x70, %b1\n"
+  __asm__ volatile(";out 0x70, %b1\n"
                    "in %b0, 0x71\n"
                    : "=a"(flag)
                    : "a"((uint8_t)0x8A));

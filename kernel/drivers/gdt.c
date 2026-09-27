@@ -1,5 +1,6 @@
-#include "gdt.h"
 #include <stdint.h>
+#include "gdt.h"
+#include "print.h"
 
 void loadGDT() {
     struct GDT_entry gdt[3];
@@ -25,11 +26,5 @@ void loadGDT() {
        0xC0,
        0
     };
-
-    __asm__ volatile(
-        "cli\n"
-        "lgdt %0"
-        :
-        : "m" (&gdt)
-    );
+    __asm__ volatile ("lgdt %0" : : "m"(gdtr));
 }
