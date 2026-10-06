@@ -1,6 +1,6 @@
 #include <stdint.h>
-#include "gdt.h"
-#include "print.h"
+#include "../header/gdt.h"
+#include "../header/print.h"
 
 void loadGDT() {
     struct GDT_entry gdt[3];

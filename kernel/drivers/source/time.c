@@ -1,6 +1,6 @@
 #include <stdbool.h>
 #include <stdint.h>
-#include "print.h"
+#include "../header/print.h"
 
 uint8_t read_cmos_register(uint8_t reg) {
   uint8_t time = 0;
