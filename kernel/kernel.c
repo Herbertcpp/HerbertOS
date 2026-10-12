@@ -4,6 +4,6 @@
 #include "drivers/header/gdt.h"
 
 void kmain(uint32_t *info_ptr) {
-  print("Hello Herbert1234");
+  print("Herbert\n");
   initGDT();
 }

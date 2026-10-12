@@ -12,9 +12,11 @@ time.o : kernel/drivers/source/time.c
 	i686-elf-gcc -masm=intel -c -ffreestanding kernel/drivers/source/time.c -o time.o
 gdt.o : kernel/drivers/header/gdt.h
 	i686-elf-gcc -masm=intel -c -ffreestanding kernel/drivers/source/gdt.c -o gdt.o
+idt.o : kernel/drivers/header/idt.h
+	i686-elf-gcc -masm=intel -c -ffreestanding kernel/drivers/source/idt.c -o idt.o
 
-os : boot.o kernel.o print.o time.o gdt.o asm_gdt.o
-	i686-elf-gcc -T linker.ld -o os -ffreestanding -nostdlib boot.o kernel.o print.o time.o gdt.o asm_gdt.o
+os : boot.o kernel.o print.o time.o gdt.o asm_gdt.o idt.o
+	i686-elf-gcc -T linker.ld -o os -ffreestanding -nostdlib boot.o kernel.o print.o time.o gdt.o asm_gdt.o idt.o
 
 os.iso : os
 	cp os isodir/boot/os

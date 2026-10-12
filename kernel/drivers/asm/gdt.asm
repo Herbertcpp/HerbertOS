@@ -42,3 +42,6 @@ reloadSegments:
     MOV GS, AX
     MOV SS, AX
     RET
+
+.bss
+    gdt_copy resb 6
