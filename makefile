@@ -20,7 +20,7 @@ os : boot.o kernel.o print.o time.o gdt.o asm_gdt.o idt.o
 
 os.iso : os
 	cp os isodir/boot/os
-	grub2-mkrescue -o os.iso isodir
+	grub-mkrescue -o os.iso isodir
 
 clean :
 	rm -rf *.o

@@ -1,3 +1,4 @@
+.text:
 global loadGDT 
 
 gdt:
@@ -43,5 +44,3 @@ reloadSegments:
     MOV SS, AX
     RET
 
-.bss
-    gdt_copy resb 6
