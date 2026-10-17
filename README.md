@@ -1,4 +1,5 @@
 # HerbertOS
+### 32 bit OS for the x86 architecture
 
 ## Reason
 Small OS project I started recently as part of my learning journey throughout the world of low level development
