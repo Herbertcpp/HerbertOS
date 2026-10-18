@@ -26,11 +26,16 @@ void exception_handler(void) {
     }
 }
 
+void keyboard_handler(void) {
+    print("Keyboard");
+    __asm__ volatile("outb %w1, %b0" : : "a" (0x20), "Nd" (0x20) : "memory");
+}
+
 void initIDT() {
     idtr.base = (uintptr_t)&idt[0];
     idtr.limit = (uint16_t)sizeof(idt_entry_t) * 255 - 1;
 
-    for(int i = 0; i < 32; i++) {
+    for(int i = 0; i < 34; i++) {
         idt_set_descriptor(i, isr_stub_table[i],  0x8E);
     }
     __asm__ volatile ("lidt %0" : : "m" (idtr));

@@ -8,8 +8,6 @@
 void kmain(uint32_t *info_ptr) {
   initGDT();
   remap(0x20, 0x28);
-  print("1");
   initIDT();
-  __asm__ volatile("int3");
-  print("2");
+  __asm__ volatile("sti");
 }
