@@ -1,6 +1,6 @@
 CC      := i686-elf-gcc
 CFLAGS  := -masm=intel -ffreestanding
-OBJS    := boot.o kernel.o print.o time.o gdt.o asm_gdt.o idt.o pic.o
+OBJS    := boot.o kernel.o print.o time.o gdt.o asm_gdt.o idt.o pic.o isr.o
 
 os : $(OBJS)
 	$(CC) -T linker.ld -o os -ffreestanding -nostdlib $(OBJS)
@@ -14,6 +14,9 @@ boot.o : kernel/i686/boot.asm
 
 asm_gdt.o : kernel/drivers/asm/gdt.asm
 	nasm -f elf32 kernel/drivers/asm/gdt.asm -o asm_gdt.o
+
+isr.o : kernel/drivers/asm/isr.asm
+	nasm -f elf32 kernel/drivers/asm/isr.asm -o isr.o
 
 kernel.o : kernel/kernel.c
 	$(CC) $(CFLAGS) -c kernel/kernel.c -o kernel.o
