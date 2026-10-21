@@ -1,5 +1,5 @@
 .text:
-global loadGDT 
+global loadGDT
 
 gdt:
     ;Null descriptor
@@ -10,7 +10,7 @@ gdt:
     dw 0x00 ;Base
     db 0x0 ;Base
     db 0x9A;access
-    db 0xFC ;Limit + Flags
+    db 0xCF ;Limit + Flags
     db 0x0 ;Base
 
     ;Data Segment
@@ -18,7 +18,7 @@ gdt:
     dw 0x00 ;Base
     db 0x0 ;Base
     db 0x92;access
-    db 0xFC ;Limit + Flags
+    db 0xCF ;Limit + Flags
     db 0x0 ;Base
 
 gdtr:
@@ -26,7 +26,7 @@ gdtr:
     dd gdt
 
 loadGDT:
-    LGDT [gdtr] 
+    LGDT [gdtr]
     call reloadSegments
     RET
 
@@ -43,4 +43,3 @@ reloadSegments:
     MOV GS, AX
     MOV SS, AX
     RET
-

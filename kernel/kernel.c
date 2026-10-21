@@ -10,4 +10,8 @@ void kmain(uint32_t *info_ptr) {
   remap(0x20, 0x28);
   initIDT();
   __asm__ volatile("sti");
+
+  for(;;) {
+      __asm__ volatile("hlt");
+  }
 }

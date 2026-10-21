@@ -49,7 +49,10 @@ isr_no_err_stub 31
 isr_no_err_stub 32
 
 isr_stub_33:
+    pusha
+    cld
     call keyboard_handler
+    popa
     iret
 
 
