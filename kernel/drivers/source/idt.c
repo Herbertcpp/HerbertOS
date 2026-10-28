@@ -2,11 +2,14 @@
 #include "../header/print.h"
 #include "../header/pic.h"
 #include <stdint.h>
+#include <stdbool.h>
 
 extern void* isr_stub_table[];
 
 static  idt_entry_t idt[256];
 static  idtr_t idtr;
+bool caps_lock_active = false;
+bool shift_pressed = false;
 
 void idt_set_descriptor(uint8_t vector, void* isr, uint8_t flags) {
     idt_entry_t* descriptor = &idt[vector];
@@ -30,7 +33,44 @@ void exception_handler(void) {
 void keyboard_handler(void) {
     uint8_t scancode = inb(0x60);
 
-    print_integer(scancode);
+
+    static const char set1[128] = {
+        0, 27, '1','2','3','4','5','6','7','8','9','0','-','=', '\b',
+             '\t','q','w','e','r','t','y','u','i','o','p','[',']','\n',
+             0,  'a','s','d','f','g','h','j','k','l',';','\'','`',
+             0,  '\\','z','x','c','v','b','n','m',',','.','/', 0, 0, 0, ' ', '*',
+    };
+    static const char set1_caps[128] = {
+        0, 27, 0,'2','3','4','5','6','7','8','9','0','-','=', '\b',
+             '\t','Q','W','E','R','T','Y','U','I','O','P','[',']','\n',
+             0,  'A','S','D','F','G','H','J','K','L',';','\'','`',
+             0,  '\\','Z','X','C','V','V','N','M',',','.','/', 0, 0, 0, 0,
+    };
+
+    char key[2] = { set1[scancode ], '\0'};
+    if(scancode == 0x2A) {
+        shift_pressed = true;
+        outb(0x20, 0x20);
+        return;
+    }
+    if(scancode == 0xAA) {
+        shift_pressed = false;
+        outb(0x20, 0x20);
+        return;
+    }
+    if(scancode > 0x43) {
+        outb(0x20, 0x20);
+        return;
+    }
+    if(key[0] == '*') {
+        caps_lock_active = !caps_lock_active;
+    }
+    if(caps_lock_active || shift_pressed) {
+        char key[2] = {set1_caps[scancode], '\0'};
+        print(key);
+    } else {
+    print(key);
+    }
 
     outb(0x20, 0x20);
 }

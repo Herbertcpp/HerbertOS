@@ -7,7 +7,7 @@ os : $(OBJS)
 
 os.iso : os
 	cp os isodir/boot/os
-	grub-mkrescue -o os.iso isodir
+	grub2-mkrescue -o os.iso isodir
 
 boot.o : kernel/i686/boot.asm
 	nasm -f elf32 kernel/i686/boot.asm -o boot.o
