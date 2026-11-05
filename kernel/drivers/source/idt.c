@@ -53,6 +53,7 @@ void keyboard_handler(void) {
         outb(0x20, 0x20);
         return;
     }
+
     if(scancode == 0xAA) {
         shift_pressed = false;
         outb(0x20, 0x20);
